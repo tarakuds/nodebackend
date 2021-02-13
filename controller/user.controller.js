@@ -1,4 +1,4 @@
-const user = require('../models/user.schema')
+const User = require('../models/user.schema')
 const bcrypt = require('bcryptjs')
 const {registrationSchema, loginSchema} = require('../models/user.joi')
 
@@ -11,7 +11,7 @@ const registerUser = async (req, res)=>{
         data.email = data.email.toLowerCase()
         data.password = await bcrypt.hash(data.password, 8)
         
-        const user = await user.create(data)
+        const user = await User.create(data)
         res.status(201).json({status:'successful', data: user})
         //Sres.send('registration page')
          
@@ -22,21 +22,30 @@ const registerUser = async (req, res)=>{
         return
         }
         if(error.code === 11000){
-            res.sttatus(400).json({status:'failed', message: 'user already exists'})
+            res.status(400).json({status:'failed', message: 'user already exists'})
         return
         }
-        res.status(400).json({status:'failed','message': error})
+        console.log(error)
+        res.status(400).json({status:'not good', message: error})
     }
 }
 
 const loginUser = async (req, res)=>{
     try {
         const data = req.body
-        await registrationSchema.validateAsync(data, {abortEarly:false})
+        await loginSchema.validateAsync(data, {abortEarly:false})
         data.email = data.email.toLowerCase()
-        data.password = await bcrypt.hash(data.password, 8)
-        const user = await user.find(data)
-        res.status(201).json()
+        const user = await User.findOne({email: data.email})
+      if(!user){
+        res.status(400).json({status:'error', message:'user doesnt exist'})
+        return
+      }
+      const checkPassword = await bcrypt.compare(data.password, user.password)
+      if(!checkPassword){
+        res.status(400).json({status:'error', message:'password incorrect'})
+        return
+      }
+        res.status(201).json({status:'success', data:user})
          
     } catch (error) {
         res.status(400).json({'message': error})

@@ -7,6 +7,6 @@ router
 
 router
 .route('/login')
-.get(loginUser)
+.post(loginUser)
 
 module.exports = router

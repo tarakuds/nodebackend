@@ -22,7 +22,8 @@ app.use('/product', Product)
 // mongoose.connect('mongodb+srv://user:Jrl4jisNlIwOngU3@estore.qzl75.mongodb.net/taraStore?retryWrites=true&w=majority', {
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser:true,
-    useUnifiedTopology:true
+    useUnifiedTopology:true,
+    useCreateIndex:true
     }).then(()=>{
     console.log('db connected')
     app.listen(PORT, ()=>{

@@ -1,10 +1,10 @@
 const joi = require('joi')
 
 const registrationSchema = joi.object({
-    firstname: joi.string().min(4).max(15).required(),
-    lastname: joi.string().min(4).max(15).required(),
+    firstname: joi.string().min(4).required(),
+    lastname: joi.string().min(4).required(),
     email: joi.string().min(4).max(30).required(),
-    password: joi.string().min(4).max(15).required(),
+    password: joi.string().min(4).required(),
 
 })
 
